@@ -1,5 +1,41 @@
 # Memory Game
 
+## 🧠 How to Play (Quick Version)
+
+This version is a memory pairing game with short narrative lines. Each pair = two related fragments (same `memoryKey`). Match all pairs before you rack up too many distortions.
+
+### Basic Loop
+1. (Optional) Enter a seed in Settings (makes the shuffle repeatable). If you skip it, a random one is used.
+2. Pick a difficulty (sets number of pairs + allowed mistakes).
+3. Flip two cards:
+   - Match → they stay face up and you unlock a vignette line.
+   - No match → they flip back after a moment and Distortions +1.
+4. Win when every pair is matched. Lose if Distortions reach the cap.
+
+### Key Terms
+- Integrity: How much of the memory is restored (matched pairs / total).
+- Distortions: Failed tries; hit the cap = collapse screen.
+- Vignette: Short line revealed when a pair is completed.
+- Efficiency: Rough skill stat (higher = fewer wasted flips).
+- Seed: Lets you replay or share the exact same layout.
+
+### Difficulty Caps
+- Calm: 3 pairs / 14 distortions
+- Standard: 4 / 20
+- Deep: 6 / 24
+- Overload: 8 / 28
+
+### After a Run
+- Success: Shows an ending assembled from the lines you revealed.
+- Collapse: Shows a quick summary (time, integrity, efficiency, seed) so you can retry smarter.
+
+### Accessibility
+Keyboard flip (focus + Enter/Space), reduced‑motion toggle, and live region updates for progress.
+
+Legacy hero image mode (`cards.json`) still exists but the narrative fragment mode (`fragments.json`) is the default.
+
+---
+
 ## 🚀 Getting Started
 
 1. Fork the repo (Make a copy of it to your repos)
