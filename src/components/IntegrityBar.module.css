@@ -1,0 +1,5 @@
+.shell { width: min(660px, 100%); margin: 0.2rem auto 0.9rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.labelsTop { display: flex; justify-content: space-between; font-size: 0.65rem; letter-spacing: .5px; opacity: .8; text-transform: uppercase; }
+.metric strong { font-size: .8rem; letter-spacing: .5px; margin-right: 4px; background: linear-gradient(90deg,var(--secondary),#ffb347); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.barWrapper { height: 9px; background: linear-gradient(180deg,#ffffff08,#ffffff05); border: 1px solid #ffffff10; border-radius: 100px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px -2px #000a; }
+.barFill { height: 100%; background: linear-gradient(90deg, var(--secondary), #ffb347); transition: width 500ms cubic-bezier(.55,.2,.35,1); box-shadow: 0 0 0 1px #ffffff05, 0 0 12px -2px #ef516faa; }

@@ -1,0 +1,61 @@
+[
+  {
+    "id": "bk-candle-1",
+    "memoryKey": "birthday_cake",
+    "prompt": "A candle stub drowned in wax, wick bent like a spine.",
+    "image": "candle_fragment.png",
+    "tags": ["birthday", "childhood", "loss", "smoke"],
+    "vignette": "The flame went out before the wish did."
+  },
+  {
+    "id": "bk-laugh-2",
+    "memoryKey": "birthday_cake",
+    "prompt": "A thin recording of laughter, looped and breaking.",
+    "sound": "child_laugh.ogg",
+    "tags": ["memory", "echo", "ghost", "family"],
+    "vignette": "Someone laughed once. The room didn’t join in."
+  },
+  {
+    "id": "rain-umb-1",
+    "memoryKey": "rain_walk",
+    "prompt": "Rain on asphalt, metallic, the world blurred behind glass.",
+    "tags": ["rain", "distance", "cold", "grey"],
+    "vignette": "Footsteps erased themselves faster than I could count."
+  },
+  {
+    "id": "rain-umb-2",
+    "memoryKey": "rain_walk",
+    "prompt": "Umbrella, snapped and hanging, fabric sagging under weight.",
+    "tags": ["umbrella", "after", "abandon", "drip"],
+    "vignette": "Shelter came apart when it mattered most."
+  },
+  {
+    "id": "note-half-1",
+    "memoryKey": "piano_lesson",
+    "prompt": "Paper torn at the staff line, graphite bruises where notes were.",
+    "tags": ["music", "lesson", "regret", "silence"],
+    "vignette": "The teacher’s hand hovered then left the air to scold instead."
+  },
+  {
+    "id": "note-half-2",
+    "memoryKey": "piano_lesson",
+    "prompt": "Pedal stuck down, keys ringing with dissonant breath.",
+    "tags": ["sound", "resonance", "unease", "blur"],
+    "vignette": "Each chord lingered too long, begging to fade."
+  },
+  {
+    "id": "empty-seat-1",
+    "memoryKey": "hospital_visit",
+    "prompt": "Vinyl chair still warm, indentations soft as fingerprints.",
+    "tags": ["absence", "waiting", "sterile", "memory"],
+    "vignette": "The chair remembered who sat there, even if I tried not to."
+  },
+  {
+    "id": "monitor-beep-2",
+    "memoryKey": "hospital_visit",
+    "prompt": "Monitor pulse cracking in uneven rhythm.",
+    "sound": "monitor_beep.ogg",
+    "tags": ["anxiety", "fragile", "time", "fear"],
+    "vignette": "Each beep measured how long I didn’t breathe."
+  }
+]
