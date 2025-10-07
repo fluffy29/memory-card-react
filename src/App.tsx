@@ -1,105 +1,104 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import CardComp from "./components/CardComp"
-import cards from "./data/cards.json"
+import baseCards from "./data/cards.json"
 import type { TCard, TCardList } from "./types/card.types"
 import ModalComp from "./components/ModalComp"
 
 const App = () => {
-	// Create pairs of cards
-	const createGameCards = (): TCardList => {
-		const pairs = cards.flatMap((card) => [
-			{ ...card, id: card.id },
-			{ ...card, id: card.id + 100 },
-		])
-		return pairs
-	}
+  const totalPairs = useMemo(() => baseCards.length, [])
 
-	// Shuffle cards
-	const shuffleCards = (cards: TCardList): TCardList => {
-		return cards.sort(() => Math.random() - 0.5)
-	}
+  const buildShuffledDeck = useCallback((): TCardList => {
+    const duplicated = baseCards.flatMap((card) => [
+      { ...card, id: card.id },
+      { ...card, id: card.id + 100 },
+    ])
+    for (let i = duplicated.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[duplicated[i], duplicated[j]] = [duplicated[j], duplicated[i]]
+    }
+    return duplicated
+  }, [])
 
-	// Game cards state
-	const [gameCards, setGameCards] = useState<TCardList>(
-		createGameCards() // shuffled cards
-	)
-	// flipped cards with an array of cards names
-	const [flippedCards, setFlippedCards] = useState<TCard["name"][]>([])
+  const [gameCards, setGameCards] = useState<TCardList>(() => buildShuffledDeck())
+  const [flippedIds, setFlippedIds] = useState<number[]>([])
+  const [moves, setMoves] = useState(0)
+  const [matches, setMatches] = useState(0)
+  const [gameOver, setGameOver] = useState(true)
+  const [bestScore, setBestScore] = useState<number | null>(() => {
+    const stored = localStorage.getItem("bestScore")
+    return stored ? Number(stored) : null
+  })
 
-	// number of moves
-	const [moves, setMoves] = useState(0)
+  const startNewGame = useCallback(() => {
+    setGameCards(buildShuffledDeck())
+    setFlippedIds([])
+    setMoves(0)
+    setMatches(0)
+    setGameOver(false)
+  }, [buildShuffledDeck])
 
-	// number of matches
-	const [matches, setMatches] = useState(0)
+  const handleCardClick = (clickedCard: TCard) => {
+    if (gameOver) return
+    if (clickedCard.matched) return
+    if (flippedIds.includes(clickedCard.id)) return
+    if (flippedIds.length === 2) return
+    setGameCards((prev: TCardList) => prev.map((c: TCard) => (c.id === clickedCard.id ? { ...c, flipped: true } : c)))
+    setFlippedIds((prev: number[]) => [...prev, clickedCard.id])
+  }
 
-	// game state
-	const [gameOver, setGameOver] = useState(true)
+  useEffect(() => {
+    if (flippedIds.length !== 2) return
+    setMoves((m: number) => m + 1)
+    const [id1, id2] = flippedIds
+    const card1 = gameCards.find((c: TCard) => c.id === id1)!
+    const card2 = gameCards.find((c: TCard) => c.id === id2)!
+    if (card1.name === card2.name) {
+      setMatches((m: number) => m + 1)
+      setGameCards((prev: TCardList) => prev.map((c: TCard) => (c.name === card1.name ? { ...c, matched: true, flipped: true } : c)))
+      setFlippedIds([])
+    } else {
+      const timeout = setTimeout(() => {
+        setGameCards((prev: TCardList) => prev.map((c: TCard) => (flippedIds.includes(c.id) ? { ...c, flipped: false } : c)))
+        setFlippedIds([])
+      }, 1000)
+      return () => clearTimeout(timeout)
+    }
+  }, [flippedIds, gameCards])
 
-	const handleCardClick = (clickedCard: TCard) => {
-		// Check if the card is already matched
-		if (clickedCard.matched) return
-		// Check if we have have 2 cards flipped already
-		if (flippedCards.length === 2) return
+  useEffect(() => {
+    if (!gameOver && matches === totalPairs) {
+      setGameOver(true)
+      setBestScore((prev: number | null) => {
+        if (prev === null || moves < prev) {
+          localStorage.setItem("bestScore", String(moves))
+          return moves
+        }
+        return prev
+      })
+    }
+  }, [matches, totalPairs, gameOver, moves])
 
-		// Flip the card
-		setGameCards((prev) =>
-			prev.map((card) =>
-				card.id === clickedCard.id ? { ...card, flipped: !card.flipped } : card
-			)
-		)
-		setFlippedCards((prev) => [...prev, clickedCard["name"]])
-	}
-
-	useEffect(() => {
-		if (flippedCards.length === 2) {
-			setMoves((prev) => prev + 1)
-			// Check if the flipped cards match
-			const [firstCard, secondCard] = flippedCards
-			if (firstCard === secondCard) {
-				// Increment the number of matches
-				setMatches((prev) => prev + 1)
-				setFlippedCards([]) // empty the flipped cards array
-				// set the matched cards to true
-				setGameCards((prev) =>
-					prev.map((card) =>
-						card.name === firstCard ? { ...card, matched: true } : card
-					)
-				)
-			} else {
-				// Flip the cards back
-				setTimeout(() => {
-					setGameCards((prev) =>
-						prev.map((card) =>
-							// find the cards to flip back to avoid flipping all of them
-							flippedCards.some((fc) => fc === card.name)
-								? { ...card, flipped: false }
-								: card
-						)
-					)
-					setFlippedCards([]) // empty the flipped cards array
-				}, 1000)
-			}
-		}
-		// end of the game
-		if (matches === gameCards.length / 2) {
-			setGameOver(true)
-		}
-	}, [flippedCards])
-
-	return (
-		<div className="main_section">
-			<h1>Memory Game</h1>
-			<p>Number of moves: {moves}</p>
-			<div className="card_container">
-				{gameCards.map((card: TCard) => {
-					return (
-						<CardComp card={card} clickProp={handleCardClick} key={card.id} />
-					)
-				})}
-			</div>
-			<ModalComp showModal={gameOver} toggleModal={setGameOver} />
-		</div>
-	)
+  return (
+    <div className="main_section">
+      <h1>Memory Game</h1>
+      <p>
+        Moves: {moves} | Matches: {matches}/{totalPairs}
+        {bestScore !== null && <span> | Best: {bestScore}</span>}
+      </p>
+      <div className="card_container" aria-label="Game board">
+        {gameCards.map((card) => (
+          <CardComp card={card} clickProp={handleCardClick} key={card.id} />
+        ))}
+      </div>
+      <ModalComp
+        showModal={gameOver}
+        moves={moves}
+        bestScore={bestScore}
+        onRestart={startNewGame}
+        isCompleted={matches === totalPairs && moves > 0}
+      />
+    </div>
+  )
 }
 
 export default App

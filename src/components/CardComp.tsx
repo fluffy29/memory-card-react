@@ -15,8 +15,12 @@ const CardComp = ({ clickProp, card }: TCardProps) => {
 		<article
 			onClick={handleClick}
 			className={`${styles.card} ${card.flipped ? styles.animate__rotate : ""}`}
+			role="button"
+			aria-pressed={card.flipped}
+			aria-label={card.flipped ? card.name : "Hidden card"}
+			data-matched={card.matched}
 		>
-			<img src={`./imgs/${card.image}`} alt={card.name} />
+			<img src={`/imgs/${card.image}`} alt={card.name} loading="lazy" />
 		</article>
 	)
 }
